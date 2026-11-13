@@ -73,7 +73,7 @@ document.addEventListener('click',function(e){var btn=e.target.closest('button')
 document.addEventListener('submit',function(e){if(e.target.id==='newForm')createLoan(e);if(e.target.id==='payForm')savePayment(e);});
 document.addEventListener('input',function(e){if(['loanAmount','loanDate'].includes(e.target.id))updatePreview();if(e.target.id==='search'){state.search=e.target.value;var box=el('loanList');if(box)box.innerHTML=loanCards(state.loans.map(function(l){return {loan:l,calc:calculations(l,limaToday())}}));}});
 document.addEventListener('change',function(e){if(e.target.name==='method')updatePreview();if(e.target.id==='filter'){state.filter=e.target.value;render();}if(['payInstallment','payDate'].includes(e.target.id))updatePayInfo();});
-window.addEventListener('focus',function(){if(!el('payModal').open)render();});document.addEventListener('visibilitychange',function(){if(!document.hidden&&!el('payModal').open)render();});setInterval(function(){if(!document.hidden&&!el('payModal').open)render();},60000);
+function refreshDates(){if(state.view==='nuevo'||el('payModal').open)return;var active=document.activeElement;if(active&&(active.id==='search'||active.id==='filter'))return;render();}window.addEventListener('focus',refreshDates);document.addEventListener('visibilitychange',function(){if(!document.hidden)refreshDates();});setInterval(function(){if(!document.hidden)refreshDates();},60000);
 load();render();
 })();
 </script>
