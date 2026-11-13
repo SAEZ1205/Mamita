@@ -1,37 +1,41 @@
-# Mamita — integración oficial con WhatsApp (propuesta técnica)
+# Avisos automáticos de Mamita — decisión de integración (13/11/2026)
 
-## Dos formas distintas
-1. **Ahora (manual y gratuita):** En la sección `Mi dinero`, escribir el número WhatsApp de destino y pulsar “Abrir resumen en WhatsApp”. Se abre un chat con el texto preparado; la persona debe pulsar Enviar. No es automático ni requiere API.
-2. **Después (automática):** Configurar **WhatsApp Business Platform — Cloud API** y un backend programado que consulte los préstamos que siguen pendientes. Para una alerta al celular de Erika aun con Mamita cerrada, ni `localStorage` ni el HTML estático son suficientes.
+## Advertencia: WhatsApp Business no es una integración autorizada para el caso de Mamita
 
-## ¿Se puede usar tu número?
-- Puedes usar tu propio **número empresarial como remitente** si se registra y habilita legalmente para la Cloud API; no conectes el WhatsApp Messenger personal directamente.
-- La madre puede conservar su WhatsApp personal como **destinataria**. Un segundo número de WhatsApp Business puede ser el remitente.
-- Es posible que **WhatsApp Business App + Cloud API** compartan el número con la modalidad *coexistence*, pero depende de elegibilidad y del onboarding correcto. Una cuenta Business recién creada **puede no ser elegible**.
-- Dos aplicaciones WhatsApp y WhatsApp Business con **dos números distintos** pueden coexistir en el mismo teléfono.
+La política de mensajes de **WhatsApp Business** vigente desde el 23 de septiembre de 2026 **prohíbe el uso de sus servicios para préstamos entre particulares y cobro de deudas**, aun cuando se utilice la API oficial, Twilio u otro intermediario. Este proyecto gestiona préstamos personales y recordatorios de cuotas vencidas; **no implementaremos recordatorios de cobro automatizados mediante WhatsApp Business API ni números destinados a eludir esta restricción**.
 
-## Prueba inicial con Meta, sin comprar chip
-1. Entra a https://developers.facebook.com/ y crea una aplicación con el producto de WhatsApp/Business Messaging.
-2. Abre el panel de configuración de WhatsApp; Meta proporciona un número de prueba y un token temporal.
-3. Añade y verifica **tu número o el número de tu mamá como destinatario de prueba** desde el panel. No compartas el código SMS de verificación ni el token en chat o repositorio.
-4. Desde el panel envía el mensaje de prueba oficial `hello_world` y comprueba que llega.
-5. Tras validar esa prueba, decide qué número empresarial definitivo utilizarás. La API de producción puede requerir configuración empresarial, registro de teléfono, plantilla aprobada y facturación.
+Política oficial: https://whatsappbusiness.com/es-la/policy/
 
-Documentación oficial: https://developers.facebook.com/documentation/business-messaging/whatsapp/overview
+Comprar otra SIM o configurar WhatsApp Business **no resuelve esta prohibición**. La versión anterior de esta guía describía cómo conectar la Cloud API de Meta, pero no había contemplado esta restricción específica; esa recomendación queda sustituida por este documento.
 
-## Para los recordatorios automáticos reales
-Arquitectura sugerida:
-- APK Mamita: registrar pagos y cuotas en almacenamiento local, sincronizados de forma segura a una base de datos remota privada.
-- Servicio programado (p. ej., tarea diaria a las 08:00 hora de Lima): identifica cuotas pendientes, las que vencen hoy y los atrasos; solo envía los datos mínimos y evita mensajes repetidos.
-- API Cloud: envía la plantilla aprobada a **un destinatario configurado y que haya dado consentimiento**. Usar nombre/alias y números mínimos, sin documentación sensible.
-- Variables de entorno protegidas del servidor: `WHATSAPP_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `MAMITA_ALERT_RECIPIENT`. Nunca insertar estos datos en HTML, APK o commits.
-- Supervisión: registrar el éxito/fallo de cada aviso, y mostrar en Mamita el último envío.
-- La falta de respuesta por WhatsApp no significa impago: Erika marca los pagos manualmente. La aplicación no debe leer sus chats.
+## Soluciones propuestas
 
-### Sobre tarifas
-El uso personal **no exime** de las tarifas de WhatsApp Business Platform. Meta cobra por mensaje entregado según categoría y país, con ciertas ventanas y franquicias para mensajes de servicio. Los recordatorios proactivos normalmente requieren una plantilla; su categorización y aprobación dependen de Meta. La API directa no implica una tarifa adicional de Twilio, aunque Meta puede cobrar por el mensaje.
+### 1. Preferida: bot privado de Telegram
+- Instalar Telegram en el teléfono de Erika (con su número actual, sin comprar otra SIM).
+- Crear un bot privado con @BotFather, abrirlo desde el Telegram de Erika y pulsar `Iniciar` / `/start`.
+- Alojaremos la clave privada del bot en el **servidor**, nunca en HTML, APK ni commits.
+- Una tarea programada consultará cuotas aún pendientes en una base de datos privada, calculará fechas según `America/Lima`, y enviará un resumen diario al chat autorizado de Erika.
+- Se deberá evitar revelar datos personales completos en mensajes. Usar alias, importe total, fecha y número de cuota, siempre sujeto a consentimiento y normativa aplicable.
+- Es necesario respaldar/sincronizar datos: el almacenamiento actual `localStorage` del demo solo vive en el navegador y un servidor externo no puede leerlo.
+- Este servicio no está instalado ni activado todavía.
 
-Fuente de precios oficial: https://whatsappbusiness.com/es-la/products/platform-pricing/
-FAQ oficial: https://whatsappbusiness.com/es-la/resources/faq/
+La API de bots de Telegram es gratuita para uso normal:
+https://core.telegram.org/bots
+https://core.telegram.org/bots/api
+https://core.telegram.org/api
 
-**No activar producción ni mensajería automática con nombres reales sin configurar seguridad, consentimiento y costos.**
+### 2. Alternativa sin otra app: notificaciones Android reforzadas
+Crear una APK Android nativa con resumen diario, notificaciones con mayor prioridad y pantalla de pendientes. La entrega a la hora exacta puede depender de permisos de alarmas y restricciones del fabricante; Android 14 deniega por defecto permisos de alarmas exactas a muchas apps nuevas:
+https://developer.android.com/about/versions/14/changes/schedule-exact-alarms
+
+### 3. Mensaje manual en WhatsApp
+La demo contiene un enlace de WhatsApp `wa.me` para abrir el texto de un resumen y que Erika decida enviarlo manualmente. No es una notificación automática y no debe usarse para automatizar cobros. Mantener su uso de acuerdo con las condiciones del servicio.
+
+## Arquitectura para instalación real
+1. Datos de préstamos y pagos en una base de datos privada cifrada y con copias de seguridad.
+2. APK que registra cada abono con fecha y sincroniza los estados con el servidor.
+3. Proceso programado por la mañana hora Perú con control de duplicados, logs y reintentos.
+4. Bot privado de Telegram o notificación Android: solo la madre será destinataria autorizada.
+5. Aplicar las tasas legales de préstamo y mora vigentes en Perú antes de desplegar la solución para cobros reales.
+
+**Estado actual:** únicamente diseño HTML estático de Mamita, sin backend, APK ni envíos automáticos.
