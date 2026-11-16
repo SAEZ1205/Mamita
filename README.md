@@ -1,4 +1,4 @@
-# Mamita · Demo móvil v0.2
+# Mamita · Demo móvil v0.3
 
 Aplicación experimental de control de préstamos para **Erika Leyla Zambrano**, con diseño verde/blanco y tipografía legible. Repositorio privado.
 
@@ -6,11 +6,17 @@ Aplicación experimental de control de préstamos para **Erika Leyla Zambrano**,
 Descarga `index.html` desde GitHub y ábrelo en Chrome/Edge. Es una demo estática sin build ni dependencias; funciona en el navegador del móvil. No usa servidor ni solicita permisos de WhatsApp.
 
 ### Navegación
-- **Inicio:** tres botones grandes: Nuevo préstamo, Mis deudores y Mi dinero.
-- **Nuevo préstamo:** alias, icono opcional (hombre/mujer/neutro), importe, modalidad, fecha de entrega y vista previa con línea de tiempo horizontal.
-- **Mis deudores:** nombres en orden alfabético; tocar una fila despliega los importes y cada cuota en un cronograma horizontal con fecha, estado, mora y registro de abonos.
-- **Mi dinero:** saldo total por cobrar si todos pagaran en la fecha actual de Perú; muestra importes por persona y una barra cronológica del inicio al vencimiento final.
+- **Inicio:** corazón verde animado al abrir y tres botones grandes, sin textos innecesarios: Nuevo préstamo, Mis deudores y Mi dinero.
+- **Nuevo préstamo:** alias, icono opcional (hombre/mujer/neutro), importe, modalidad y fecha. Vista previa con una línea horizontal real, puntos diarios y estaciones con fecha e importe; se destaca el cobro por día de atraso.
+- **Mis deudores:** los préstamos son fichas **independientes**, incluso cuando dos fichas tienen el mismo nombre. Se puede ordenar por A–Z, próximo pago (atrasados primero), mayor deuda y más atrasado. Al tocar una ficha se despliega suavemente el monto prestado, el monto con intereses, el total calculado, el cobro diario y una línea de tiempo con una personita amarilla animada que marca la fecha actual. El recorrido es verde hasta hoy y gris después. Los puntos de las cuotas permiten registrar pagos. Tras el vencimiento final, la línea muestra una ventana temporal móvil y no se hace infinita.
+- **Mi dinero:** solo el total destacado «Si todos pagaran hoy», una lista de personas y una línea de tiempo resumida por cada una. Los préstamos activos del **mismo nombre/alias normalizado** se agrupan en una única fila, sumando lo que debe esa persona. Se puede ordenar A–Z o por mayor deuda. No se muestran aquí cobros diarios ni desgloses de mora.
 - **WhatsApp manual:** permite introducir el número de destino y abrir el resumen prellenado. **No envía mensajes automáticamente.**
+
+
+## Regla de agrupación provisional
+En esta **demo**, los préstamos se agrupan en «Mi dinero» por coincidencia del nombre o alias sin distinguir mayúsculas ni espacios repetidos. Si dos personas diferentes tienen el mismo nombre, aparecerán juntas indebidamente. **Antes de usar la APK en operaciones reales, reemplazaremos esta agrupación por un identificador único de cliente y selección explícita de personas ya registradas.**
+
+Para comprobar la función de agrupación, crea dos préstamos con el mismo alias y abre «Mi dinero»: la lista mostrará una persona con el importe agregado mientras «Mis deudores» conserva dos fichas separadas.
 
 ### Cálculos demostrativos
 - Mensual: capital + 30 % pactado, con vencimiento a 30 días; recargo simulado de 2 % del capital por día de atraso.
