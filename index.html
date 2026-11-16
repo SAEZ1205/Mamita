@@ -212,7 +212,7 @@ function load(){
   var raw=localStorage.getItem(KEY);
   if(raw!==null){
    var data=JSON.parse(raw);
-   if(Array.isArray(data)){state.loans=data;state.clients=[];}
+   if(Array.isArray(data)){try{if(!localStorage.getItem(KEY+'-backup-v03'))localStorage.setItem(KEY+'-backup-v03',raw);}catch(backupError){console.warn('No se pudo guardar copia anterior',backupError);}state.loans=data;state.clients=[];}
    else if(data&&Array.isArray(data.loans)){state.loans=data.loans;state.clients=Array.isArray(data.clients)?data.clients:[];state.nextClientNumber=data.nextClientNumber||1;}
    else throw Error('Formato de datos no reconocido');
    migrateIdentity();save();return;
