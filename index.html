@@ -52,6 +52,22 @@ body{background:#e8f3ea;font-size:17px}.app{display:block;max-width:540px;backgr
 @media(prefers-reduced-motion:reduce){.splash,.home-logo,.little-walker,.walker-arm,.walker-leg{animation:none!important}.splash{display:none!important}.accordion-shell,.journey-person,.journey-done{transition:none!important}}
 @media(max-width:500px){.topbar .heading{font-size:28px}.home-hero{padding:30px 18px 25px}.home-tile{min-height:87px}.money-total .big{font-size:39px}.journey .stop-sum{font-size:11px}.triplet .metric strong{font-size:17px}.charge-per-day strong{font-size:17px}}
 
+
+/* Ajuste de escala: 1 punto diario y estaciones sin superposiciones */
+.journey-stop{width:58px;top:94px}
+.stop-button{position:relative;width:58px;height:87px;display:flex;align-items:flex-start;justify-content:center}
+.stop-date{left:50%;top:26px;transform:translateX(-50%);font-size:11px}
+.stop-dot{width:17px;height:17px;margin:0}
+.stop-sum{position:absolute;left:50%;top:47px;transform:translateX(-50%);font-size:12px}
+.stop-status{position:absolute;left:50%;top:65px;transform:translateX(-50%);font-size:10px}
+.journey-tick{position:absolute;top:101px;width:4px;height:4px;border-radius:50%;background:#afbdb2;transform:translateX(-50%);z-index:1}
+.journey-tick.reached{background:#2c9760}
+.journey.compact .journey-stop{width:44px;top:73px}
+.journey.compact .stop-button{width:44px;height:55px}
+.journey.compact .stop-date{top:22px;font-size:10px}
+.journey.compact .stop-dot{width:14px;height:14px}
+.journey.compact .journey-tick{top:79px;width:3px;height:3px}
+@media(max-width:360px){.stop-date{font-size:10px}.stop-sum{font-size:11px}.stop-status{font-size:9px}.metric span{letter-spacing:-.02em}}
 </style>
 </head>
 <body>
@@ -161,7 +177,7 @@ function journey(loans,compact,controls,asPreview){
  var windowStart=first,windowEnd=last,daysOver=diff(last,today);
  if(daysOver>0){windowStart=shift(today,-21);windowEnd=shift(today,7);}
  var duration=Math.max(1,diff(windowStart,windowEnd)),pos=Math.max(0,Math.min(1,diff(windowStart,today)/duration));
- var pct=function(day){return 5+90*Math.max(0,Math.min(1,diff(windowStart,day)/duration));};
+ var pct=function(day){return 10+80*Math.max(0,Math.min(1,diff(windowStart,day)/duration));};
  var p=pct(today),all=[],id=0;
  loans.forEach(function(l){
    var q=asPreview?totals(l).items:calculations(l,today).schedule;
@@ -169,6 +185,10 @@ function journey(loans,compact,controls,asPreview){
  });
  all.sort(function(a,b){return a.due.localeCompare(b.due)||a.idx-b.idx;});
  var visible=all.filter(function(q){return q.due>=windowStart&&q.due<=windowEnd;});
+ if(compact&&visible.length>4){visible=visible.slice().sort(function(a,b){return Math.abs(diff(today,a.due))-Math.abs(diff(today,b.due));}).slice(0,4).sort(function(a,b){return a.due.localeCompare(b.due);});}
+ var dueSet={};visible.forEach(function(q){dueSet[q.due]=true;});
+ var dailyDots='';
+ for(var day=1;day<duration&&day<=65;day++){var markerDay=shift(windowStart,day);if(dueSet[markerDay])continue;dailyDots+='<span aria-hidden="true" class="journey-tick'+(markerDay<=today?' reached':'')+'" style="left:'+pct(markerDay)+'%"></span>';}
  var compactDuplicate={};
  var marks=visible.map(function(q){
    var x=pct(q.due),status=asPreview?'Pendiente':q.status||'Pendiente',
@@ -182,7 +202,7 @@ function journey(loans,compact,controls,asPreview){
    return '<div class="journey-stop '+cls+(compact?' simple':'')+'" style="left:'+x+'%">'+(canPay?'<button type="button" data-pay="'+q.idx+'" class="stop-button" title="Cuota '+q.idx+' — '+shortDate(q.due)+', registrar pago" aria-label="Registrar pago de cuota '+q.idx+', '+shortDate(q.due)+'">'+node+'</button>':'<div class="stop-button">'+node+'</div>')+'</div>';
  }).join('');
  var lastNote=daysOver>0?'<div class="journey-after">Vencimiento final: '+shortDate(last)+' · El tiempo sigue avanzando</div>':'';
- return '<div class="journey '+(compact?'compact':'')+'" role="group" aria-label="Línea de tiempo, fecha de hoy '+shortDate(today)+'"><div class="journey-progress" style="left:5%;width:90%"><span class="journey-done" style="width:'+(pos*100)+'%"></span></div><div class="journey-person" style="left:'+p+'%"><span class="walker-date">'+shortDate(today)+'</span>'+personWalker()+'</div>'+marks+'</div>'+lastNote+(controls?'<div class="journey-legend">Toca una fecha para registrar un pago.</div>':'');
+ return '<div class="journey '+(compact?'compact':'')+'" role="group" aria-label="Línea de tiempo, fecha de hoy '+shortDate(today)+'"><div class="journey-progress" style="left:10%;width:80%"><span class="journey-done" style="width:'+(pos*100)+'%"></span></div><div class="journey-person" style="left:'+p+'%"><span class="walker-date">'+shortDate(today)+'</span>'+personWalker()+'</div>'+dailyDots+marks+'</div>'+lastNote+(controls?'<div class="journey-legend">Toca una fecha para registrar un pago.</div>':'');
 }
 function timelineHorizontal(items,controls){return '<div class="horizontal-timeline">'+items.map(function(q){return '<span>'+shortDate(q.due)+' · '+money(q.amount)+'</span>';}).join('')+'</div>';}
 function renderExpanded(l){
