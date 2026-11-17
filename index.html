@@ -297,6 +297,13 @@ button.line-action:focus-visible{outline:2px solid #318552;outline-offset:1px;bo
  .splash{display:none}
 }
 
+
+/* Movimiento editorial sutil: el contenido entra, no rebota */
+@keyframes menu-appear{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:translateY(0)}}
+.home-menu{animation:menu-appear .55s cubic-bezier(.17,.78,.22,1) .14s both}
+.home-tile .tile-icon{transition:background .2s ease,color .2s ease}
+.home-tile:hover .tile-icon{background:#DDEDE0;color:#145E3A}
+@media(prefers-reduced-motion:reduce){.home-menu{animation:none}}
 </style>
 </head>
 <body>
@@ -374,6 +381,7 @@ function header(){
  el('todayBadge').style.display=state.view==='dinero'?'none':'';
  document.querySelector('.topbar').style.display=state.view==='inicio'?'none':'';
  document.querySelector('.banner').style.display=state.view==='inicio'?'none':'';
+ var fine=document.querySelector('.fineprint');if(fine)fine.style.display=state.view==='inicio'?'none':'';
  ['deudores','nuevo'].forEach(function(v){['nav-','mobile-'].forEach(function(p){var n=el(p+v);if(n)n.classList.toggle('active',state.view===v);});});
 }
 function render(){header();if(state.view==='inicio'){el('appContent').innerHTML=renderHome();}else if(state.view==='dinero'){el('appContent').innerHTML=renderMoney();}else if(state.view==='nuevo'){el('appContent').innerHTML=renderNew();changeClientMode();updatePreview();}else{el('appContent').innerHTML=renderList();}alignTimelines(el('appContent'));}
