@@ -91,6 +91,7 @@ select.control{padding-right:30px;cursor:pointer}
 .field .hint{color:#8A9C8C;font-size:11px;line-height:1.45}
 .formgrid{display:grid;grid-template-columns:1fr 1fr;gap:17px 13px}
 .formgrid>.field:nth-child(1),.formgrid>.field:nth-child(2),.formgrid>.field:nth-child(3){grid-column:1/-1}
+.formgrid>#genderField{grid-column:1/-1}
 .methodrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .methodrow>label{position:relative;min-width:0}
 .methodrow input,.gender-grid input{position:absolute;opacity:0;width:1px;height:1px}
@@ -369,7 +370,7 @@ function header(){
  el('pageTitle').textContent=labels[state.view]||'';
  el('pageSubtitle').textContent='';
  el('pageSubtitle').style.display='none';
- el('todayBadge').textContent='Hoy, '+fmtDate(limaToday());
+ el('todayBadge').textContent=shortDate(limaToday());
  el('todayBadge').style.display=state.view==='dinero'?'none':'';
  document.querySelector('.topbar').style.display=state.view==='inicio'?'none':'';
  document.querySelector('.banner').style.display=state.view==='inicio'?'none':'';
