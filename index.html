@@ -154,6 +154,80 @@ button.line-action:focus-visible{outline:2px solid #258452;border-radius:5px}
  .person-line .right{font-size:16px}
 }
 @media(prefers-reduced-motion:reduce){.timeline-walker .little-walker,.splash .splash-heart{animation:none!important}}
+
+
+/* Mamita 0.5 — refinamiento visual y detalles compactos */
+:root{
+ --bg:#f7faf8;--paper:#ffffff;--ink:#243d2f;--sub:#718577;
+ --line:#e5eee7;--wine:#24764d;--wine-dark:#1b5e3d;
+ --blush:#edf7ef;--shadow:0 6px 21px rgba(23,73,42,.045)
+}
+body{background:#f0f6f1;-webkit-font-smoothing:antialiased}
+.app{background:var(--bg)}
+.panel{border-color:#e9f0ea;box-shadow:0 5px 22px rgba(25,70,44,.04)}
+.topbar{background:linear-gradient(145deg,#236e49 0%,#35845b 100%);box-shadow:0 5px 20px rgba(24,91,57,.08)}
+.person-summary{background:#fff;border:1px solid #e7efe8;border-radius:16px;padding:16px;box-shadow:0 3px 14px rgba(31,76,49,.035);transition:border-color .2s ease,box-shadow .2s ease}
+.person-summary:has(.accordion-shell.open){border-color:#d4e7d8;box-shadow:0 8px 25px rgba(26,85,51,.055)}
+.accordion-body{border-top:1px solid #edf2ee;margin-top:13px;padding-top:11px}
+.person-head .sub{font-size:11px;letter-spacing:.01em}
+.chevron{color:#5d9470}
+.debt-detail-top{display:flex;align-items:center;justify-content:space-between;min-height:32px;margin-bottom:9px}
+.debt-detail-top>span{font-size:12px;font-weight:800;color:#698373;letter-spacing:.025em}
+.detail-options{border:1px solid transparent;background:transparent;border-radius:10px;color:#6b8a75;font-size:25px;letter-spacing:1px;width:40px;height:35px;line-height:24px;display:grid;place-items:center}
+.detail-options:hover,.detail-options[aria-expanded="true"]{background:#edf6ef;border-color:#d7e7da;color:#1a7046}
+.detail-options:focus-visible{outline:2px solid #308b5a;outline-offset:2px}
+.debt-entry .triplet{gap:7px}
+.debt-entry .metric{background:#f5f8f5;border:1px solid #eff4ef;border-radius:11px;padding:12px 9px}
+.debt-entry .metric.highlight{background:#eaf6ed;border-color:#d8e9dc}
+.debt-entry .metric span{color:#697e6f;font-size:11px;min-height:30px;line-height:1.3}
+.debt-entry .metric strong{color:#254f36;letter-spacing:-.025em}
+.debt-entry .metric.highlight strong{color:#1f774a}
+.charge-per-day{background:#f1f7f2;border:0;border-radius:10px;padding:11px 13px;margin-top:12px;color:#51715b;gap:10px}
+.charge-per-day span{font-size:12px;font-weight:650}
+.charge-per-day strong{font-size:15px;color:#246b46;letter-spacing:-.01em}
+.debt-entry .section-label{font-size:13px;letter-spacing:.015em;text-transform:none;font-weight:800;margin:21px 0 6px;color:#315740}
+.timeline-scroll{scrollbar-width:none;border-radius:9px}
+.timeline-scroll::-webkit-scrollbar{display:none}
+.timeline-scroll:focus-visible{outline:2px solid #93c6a2;outline-offset:1px}
+.time-track{height:145px}
+.timeline-walker .little-walker{animation-duration:3.6s}
+.walker-tag{border-color:#dbe8de;color:#1b6441;font-size:11px;background:#f3f8f4}
+.time-rail{height:4px;background:#e1e9e3}
+.time-rail-past{background:linear-gradient(90deg,#87bd97,#318b5a)}
+.line-stop .line-date{color:#526d59}
+.line-stop .line-money{color:#2a5940}
+.line-stop .line-state{color:#728575;font-size:10px}
+.line-stop.overdue .line-state{color:#b37735}
+.line-stop.paid .line-state{color:#36845a}
+.detail-payment{display:flex;justify-content:flex-end;margin:0}
+.detail-payment .button{width:100%;min-height:45px;border-radius:11px;font-size:14px;box-shadow:none}
+.loan-settings{display:grid;gap:9px;background:#f8fbf9;border:1px solid #e0ebe2;padding:13px;border-radius:12px;margin:0 0 15px}
+.loan-settings.hidden{display:none}
+.loan-settings .settings-title{font-weight:800;color:#2d6545;font-size:13px}
+.loan-settings .settings-client{font-size:12px;color:#688273}
+.loan-settings label{font-size:12px;font-weight:700;color:#4f6c57}
+.loan-settings .control{min-height:42px;font-size:14px}
+.loan-settings .button{width:100%}
+.movements{border-top:1px solid #e2ede5;padding:10px 0 0;font-size:12px}
+.movements summary{cursor:pointer;font-weight:750;color:#4f7860;padding:3px 0}
+.movements .historyitem{font-size:12px}
+@media(max-width:540px){
+ .person-summary{padding:13px;border-radius:14px}
+ .debt-entry .metric{padding:10px 6px}
+ .debt-entry .metric span{font-size:10px}
+ .debt-entry .metric strong{font-size:clamp(13px,3.7vw,18px)}
+ .charge-per-day{padding:10px 11px}
+ .detail-payment .button{min-height:47px}
+}
+@media(max-width:360px){
+ .debt-entry .triplet{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .debt-entry .triplet .metric.highlight{grid-column:auto}
+ .debt-entry .metric strong{font-size:13px}
+ .debt-entry .metric span{min-height:42px}
+ .debt-entry .metric{padding:10px 5px}
+ .charge-per-day{flex-wrap:wrap}
+}
+
 </style>
 </head>
 <body>
@@ -313,16 +387,29 @@ function journey(loans,compact,controls,asPreview){
   return '<div class="line-stop '+cls+'" style="left:'+x(q.due)+'px">'+(controls?'<button class="line-action" type="button" data-pay="'+q.idx+'" aria-label="Registrar pago: cuota '+q.idx+' del '+shortDate(q.due)+'">'+label+'</button>':'<div class="line-action">'+label+'</div>')+'</div>';
  }).join('');
  var note=over>0?'<div class="timeline-note">Última fecha: '+shortDate(last)+' · Seguimiento activo</div>':'';
- return '<div class="timeline-scroll'+(compact?' is-compact':'')+'" tabindex="0" aria-label="Cronograma horizontal. Desliza para ver las fechas."><div class="time-track" style="width:'+trackWidth+'px"><div class="time-rail" style="left:'+lineStart+'px;width:'+lineLength+'px"><span class="time-rail-past" style="width:'+Math.max(0,Math.min(100,(currentX-lineStart)/lineLength*100))+'%"></span></div>'+ticks+stops+'<div class="timeline-walker" style="left:'+currentX+'px"><div class="walker-tag">'+shortDate(today)+'</div>'+personWalker()+'</div></div></div>'+note+(controls?'<div class="journey-legend">Toca una fecha para registrar un pago.</div>':'');
+ return '<div class="timeline-scroll'+(compact?' is-compact':'')+'" tabindex="0" aria-label="Cronograma horizontal. Desliza para ver las fechas."><div class="time-track" style="width:'+trackWidth+'px"><div class="time-rail" style="left:'+lineStart+'px;width:'+lineLength+'px"><span class="time-rail-past" style="width:'+Math.max(0,Math.min(100,(currentX-lineStart)/lineLength*100))+'%"></span></div>'+ticks+stops+'<div class="timeline-walker" style="left:'+currentX+'px"><div class="walker-tag">'+shortDate(today)+'</div>'+personWalker()+'</div></div></div>'+note;
 }
 function alignTimelines(scope){(scope||document).querySelectorAll('.timeline-scroll').forEach(function(box){var w=box.querySelector('.timeline-walker');if(w)box.scrollLeft=Math.max(0,w.offsetLeft-box.clientWidth*.43);});}
 function timelineHorizontal(items,controls){return '<div class="horizontal-timeline">'+items.map(function(q){return '<span>'+shortDate(q.due)+' · '+money(q.amount)+'</span>';}).join('')+'</div>';}
 function renderExpanded(l){
- var c=calculations(l,limaToday()),paid=(l.payments||[]).slice().sort(function(a,b){return b.date.localeCompare(a.date);}),person=clientById(l.clientId);
- return '<div class="triplet"><div class="metric"><span>Monto prestado</span><strong>'+money(l.amount)+'</strong></div><div class="metric"><span>Con intereses</span><strong>'+money(c.base)+'</strong></div><div class="metric highlight"><span>Total calculado</span><strong>'+money(c.total)+'</strong></div></div><div class="charge-per-day"><span>Cobro por día de atraso</span><strong>'+money(c.rate)+(l.method==='semanal'?' / cuota':'')+'</strong></div><h3 class="section-label">CRONOGRAMA</h3>'+journey([l],false,true,false)+'<div class="info"><div class="tableish"><span>Pagado</span><strong>'+money(c.paid)+'</strong></div><div class="tableish"><b>Por cobrar</b><strong>'+money(c.pending)+'</strong></div></div>'+
- '<div class="client-ident"><span>Persona <strong>'+(person?clientCode(person.number):'—')+'</strong>'+(person&&stablePersonName(person.name)!==stablePersonName(l.name)?' · '+escapeHTML(person.name):'')+'</span><button type="button" class="link-trigger" data-show-link="'+escapeHTML(l.id)+'">Vincular</button></div>'+
- '<div class="client-link-panel hidden" id="link-'+escapeHTML(l.id)+'"><label for="clientPick-'+escapeHTML(l.id)+'">Asignar a otra persona</label><select class="control" id="clientPick-'+escapeHTML(l.id)+'">'+state.clients.filter(function(p){return p.id!==l.clientId;}).map(function(p){return '<option value="'+escapeHTML(p.id)+'">'+clientCode(p.number)+' · '+escapeHTML(p.name)+'</option>';}).join('')+'</select><button type="button" class="button secondary small" data-link="'+escapeHTML(l.id)+'">Confirmar vínculo</button><button type="button" class="button ghost small" data-separate="'+escapeHTML(l.id)+'">Crear otro número</button></div>'+
- '<div class="history"><b>Pagos registrados</b>'+(paid.length?paid.map(function(p){return '<div class="historyitem"><span>'+shortDate(p.date)+' · Cuota '+p.idx+'</span><strong>'+money(Number(p.amount||0)+Number(p.mora||0))+'</strong></div>';}).join(''):'<p class="helptext">Sin pagos registrados.</p>')+'</div><div class="detailactions"><button class="button secondary small" id="copyReminder">Copiar recordatorio</button></div>';
+ var c=calculations(l,limaToday()),person=clientById(l.clientId),
+ others=state.clients.filter(function(p){return p.id!==l.clientId}),
+ payments=(l.payments||[]).slice().sort(function(a,b){return b.date.localeCompare(a.date)});
+ var loanId=escapeHTML(l.id),settings=
+ '<div class="loan-settings hidden" id="manage-'+loanId+'">'+
+ '<div class="settings-title">Opciones del préstamo</div>'+
+ '<div class="settings-client">Persona '+(person?clientCode(person.number):'—')+(person?' · '+escapeHTML(person.name):'')+'</div>'+
+ (others.length?'<label for="clientPick-'+loanId+'">Cambiar de persona</label><select class="control" id="clientPick-'+loanId+'">'+others.map(function(p){return '<option value="'+escapeHTML(p.id)+'">'+clientCode(p.number)+' · '+escapeHTML(p.name)+'</option>';}).join('')+'</select><button class="button secondary small" type="button" data-link="'+loanId+'">Vincular préstamo</button>':'')+
+ '<button class="button ghost small" type="button" data-separate="'+loanId+'">Asignar un número nuevo</button>'+
+ '<details class="movements"><summary>Ver movimientos ('+payments.length+')</summary>'+
+ (payments.length?payments.map(function(p){return '<div class="historyitem"><span>'+shortDate(p.date)+' · Cuota '+p.idx+'</span><strong>'+money(Number(p.amount||0)+Number(p.mora||0))+'</strong></div>';}).join(''):'<p class="helptext">Sin pagos registrados.</p>')+'</details>'+
+ '</div>';
+ return '<div class="debt-detail-top"><span>Resumen</span><button class="detail-options" type="button" data-more="'+loanId+'" aria-expanded="false" aria-controls="manage-'+loanId+'" aria-label="Opciones del préstamo">···</button></div>'+
+ settings+
+ '<div class="triplet"><div class="metric"><span>Monto prestado</span><strong>'+money(l.amount)+'</strong></div><div class="metric"><span>Con intereses</span><strong>'+money(c.base)+'</strong></div><div class="metric highlight"><span>Total calculado</span><strong>'+money(c.total)+'</strong></div></div>'+
+ '<div class="charge-per-day"><span>Cobro diario por atraso</span><strong>'+money(c.rate)+(l.method==='semanal'?' / cuota':'')+'</strong></div>'+
+ '<h3 class="section-label">Cronograma</h3>'+journey([l],false,true,false)+
+ '<div class="detail-payment"><button type="button" class="button" data-pay="0">＋ Registrar pago</button></div>';
 }
 function progressFor(l){var end=shift(l.start,l.method==='mensual'?30:28),today=limaToday(),all=Math.max(1,diff(l.start,end)),done=diff(l.start,today),pct=Math.max(0,Math.min(100,Math.round(100*done/all))),label=done<0?'Aún no inicia':done>all?'Plazo vencido':done===all?'Vence hoy':'En curso';return '<div class="progress"><div class="progress-track"><div class="progress-fill" style="width:'+pct+'%"></div><div class="progress-dot" style="left:'+pct+'%"></div></div><div class="progress-labels"><span>Inicio: '+fmtDate(l.start)+'</span><span>Fin: '+fmtDate(end)+'</span></div><div class="tiny-state">● Hoy · '+label+'</div></div>'; }
 function summaryMessage(){var active=sortedLoans().map(function(l){return {loan:l,calc:calculations(l,limaToday())}}).filter(function(v){return !v.calc.finished});var sum=dec(active.reduce(function(t,x){return t+cents(x.calc.pending)},0));return 'MAMITA · RESUMEN DE COBROS\nFecha: '+fmtDate(limaToday())+'\nTOTAL POR COBRAR HOY: '+money(sum)+'\n\n'+active.map(function(x){return x.loan.name+': '+money(x.calc.pending)+' · fin '+fmtDate(shift(x.loan.start,x.loan.method==='mensual'?30:28))}).join('\n')+'\n\nRecuerda verificar los pagos en Mamita.';}
@@ -345,7 +432,7 @@ function renderMoney(){
 function renderDetail(l){var c=calculations(l,limaToday());var s='<section class="panel"><button class="button ghost small" data-back="true">← Volver a mis deudores</button><div class="loanhead" style="margin-top:17px"><div><div class="eyebrow">Ficha de préstamo</div><h2>'+escapeHTML(l.name)+'</h2><div class="detailmeta">'+(l.method==='mensual'?'Mensual · 30 días':'Semanal · 28 días')+' · Inicio: '+fmtDate(l.start)+'</div></div>'+badge(c.finished?'Pagada':c.lateCount?'Atrasada':c.dueToday?'Vence hoy':'Pendiente')+'</div><div class="triplet"><div class="metric"><span>Total pactado</span><strong>'+money(c.base)+'</strong></div><div class="metric"><span>Recargos calculados</span><strong>'+money(c.late)+'</strong></div><div class="metric highlight"><span>Total actualizado</span><strong>'+money(c.total)+'</strong></div></div><div class="info"><div class="tableish"><span>Monto entregado</span><strong>'+money(l.amount)+'</strong></div><div class="tableish"><span>Interés pactado</span><strong>'+money(c.interest)+'</strong></div><div class="tableish"><span>Pagado (cuotas y recargos)</span><strong>'+money(c.paid)+'</strong></div><div class="divider" style="margin:12px 0"></div><div class="tableish"><b>Saldo pendiente por cobrar</b><strong style="color:var(--wine);font-size:19px">'+money(c.pending)+'</strong></div><p class="helptext" style="margin:10px 0 0">Mora por día: '+money(c.rate)+(l.method==='semanal'?' por cada cuota vencida':' después del vencimiento')+'.</p></div><div class="detailactions"><button class="button" data-pay="1">＋ Registrar pago</button><button class="button secondary" id="copyReminder">Copiar recordatorio</button></div><div class="divider"></div><h3 class="panel-title" style="font-size:22px">Línea de tiempo de pagos</h3><p class="section-sub">Cada cuota tiene su fecha, su saldo y su mora independiente.</p>'+timeline(c.schedule,true);
 var payments=(l.payments||[]).slice().sort(function(a,b){return b.date.localeCompare(a.date)});s+='<div class="history"><h3 style="font-size:17px">Historial de pagos</h3>'+(payments.length?payments.map(function(p){return '<div class="historyitem"><div><strong>'+fmtDate(p.date)+'</strong><div class="muted">Cuota '+p.idx+'</div></div><div style="text-align:right">'+money((p.amount||0)+(p.mora||0))+'<div class="muted">Cuota '+money(p.amount)+' · Mora '+money(p.mora)+'</div></div></div>';}).join(''):'<p class="muted">Aún no se han registrado pagos.</p>')+'</div></section>';return s;}
 function selectView(view){state.view=view;state.selected=null;window.scrollTo(0,0);render();}
-function openPay(idx){var l=state.loans.find(function(x){return x.id===state.selected});if(!l)return;var calc=calculations(l,limaToday());el('payName').textContent=l.name+' · '+(l.method==='mensual'?'Mensual':'Semanal');el('payInstallment').innerHTML=calc.schedule.map(function(q){return '<option value="'+q.idx+'"'+(idx===q.idx?' selected':'')+'>Cuota '+q.idx+' · '+fmtDate(q.due)+'</option>';}).join('');el('payDate').value=limaToday();el('payDate').max=limaToday();el('payAmount').value='0';el('payMora').value='0';updatePayInfo();el('payModal').showModal();}
+function openPay(idx){var l=state.loans.find(function(x){return x.id===state.selected});if(!l)return;var calc=calculations(l,limaToday());if(idx===0){var next=calc.schedule.find(function(q){return q.baseRemaining>0||q.moraRemaining>0;});idx=next?next.idx:1;}el('payName').textContent=l.name+' · '+(l.method==='mensual'?'Mensual':'Semanal');el('payInstallment').innerHTML=calc.schedule.map(function(q){return '<option value="'+q.idx+'"'+(idx===q.idx?' selected':'')+'>Cuota '+q.idx+' · '+fmtDate(q.due)+'</option>';}).join('');el('payDate').value=limaToday();el('payDate').max=limaToday();el('payAmount').value='0';el('payMora').value='0';updatePayInfo();el('payModal').showModal();}
 function updatePayInfo(){var l=state.loans.find(function(x){return x.id===state.selected});if(!l)return;var date=el('payDate').value||limaToday();var q=calculations(l,date).schedule[Number(el('payInstallment').value)-1];if(!q)return;el('payExplanation').innerHTML='<b>Vencimiento:</b> '+fmtDate(q.due)+'<br><b>Falta pagar de la cuota:</b> '+money(q.baseRemaining)+'<br><b>Recargo acumulado hasta la fecha indicada:</b> '+money(q.moraRemaining)+'<br><small>Puede anotar un abono parcial o pagar toda la cuota. El recargo se anota por separado.</small>';el('payAmount').max=q.baseRemaining.toFixed(2);el('payMora').max=q.moraRemaining.toFixed(2);}
 function savePayment(e){e.preventDefault();var l=state.loans.find(function(x){return x.id===state.selected});if(!l)return;var idx=Number(el('payInstallment').value),date=el('payDate').value,a=Number(el('payAmount').value),m=Number(el('payMora').value);if(!date||date>limaToday()||date<l.start){toast('Elige una fecha válida entre la entrega y hoy.');return;}if(!Number.isFinite(a)||!Number.isFinite(m)||a<0||m<0||a+m<=0){toast('Ingresa un importe mayor que cero.');return;}var q=calculations(l,date).schedule[idx-1];if(!q){toast('No se encontró la cuota.');return;}if(cents(a)>cents(q.baseRemaining)||cents(m)>cents(q.moraRemaining)){toast('El abono supera el importe pendiente en la fecha indicada.');return;}l.payments=l.payments||[];l.payments.push({id:'p'+Date.now(),idx:idx,date:date,amount:dec(cents(a)),mora:dec(cents(m))});save();el('payModal').close();render();toast('Pago guardado correctamente.');}
 function copyReminder(){var l=state.loans.find(function(x){return x.id===state.selected});if(!l)return;var c=calculations(l,limaToday());var p=c.schedule.filter(function(x){return x.status!=='Pagada'});var msg='MAMITA - RECORDATORIO DE COBRO\nCliente: '+l.name+'\nSaldo por cobrar: '+money(c.pending)+'\n'+p.map(function(x){return 'Cuota '+x.idx+' - '+fmtDate(x.due)+' - pendiente: '+money(x.baseRemaining+x.moraRemaining)}).join('\n')+'\nVerifica manualmente los pagos registrados.';if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(msg).then(function(){toast('Recordatorio copiado. Puedes pegarlo en WhatsApp.');}).catch(function(){window.prompt('Copia este recordatorio:',msg);});}else{window.prompt('Copia este recordatorio:',msg);}}
@@ -359,7 +446,7 @@ function createLoan(e){
  var loan={id:'l'+Date.now()+'_'+Math.floor(Math.random()*100000),clientId:client.id,name:name,gender:client.gender,amount:dec(cents(amount)),method:method,start:date,payments:[]};
  state.loans.push(loan);save();state.selected=loan.id;state.view='deudores';render();toast('Préstamo guardado · '+clientCode(client.number));
 }
-document.addEventListener('click',function(e){var btn=e.target.closest('button');if(!btn)return;if(btn.dataset.tab){selectView(btn.dataset.tab);return;}if(btn.dataset.open){var newId=state.selected===btn.dataset.open?null:btn.dataset.open;state.selected=newId;document.querySelectorAll('.debt-entry').forEach(function(row){var t=row.querySelector('[data-open]'),opened=t&&t.dataset.open===newId,outer=row.querySelector('.accordion-shell');if(outer)outer.classList.toggle('open',!!opened);if(t){t.setAttribute('aria-expanded',opened?'true':'false');var chevron=t.querySelector('.chevron');if(chevron)chevron.textContent=opened?'⌃':'⌄';}if(opened)alignTimelines(row);});return;}if(btn.dataset.showLink){var box=el('link-'+btn.dataset.showLink);if(box){if(!box.querySelector('option')){toast('No hay otra persona registrada.');return;}box.classList.toggle('hidden');}return;}if(btn.dataset.link){var loan=state.loans.find(function(l){return l.id===btn.dataset.link;}),sel=el('clientPick-'+btn.dataset.link),client=sel&&clientById(sel.value);if(!loan||!client)return;if(confirm('¿Vincular el préstamo «'+loan.name+'» a '+clientCode(client.number)+' · '+client.name+'?')){loan.clientId=client.id;loan.gender=client.gender;save();render();toast('Préstamo vinculado a '+clientCode(client.number));}return;}if(btn.dataset.separate){var loan=state.loans.find(function(l){return l.id===btn.dataset.separate});if(!loan)return;if(confirm('¿Este préstamo es de una persona diferente? Le asignaremos un nuevo número sin borrar sus pagos.')){var person=createClient(loan.name,loan.gender);loan.clientId=person.id;save();render();toast('Nuevo número '+clientCode(person.number));}return;}if(btn.dataset.back){state.selected=null;render();return;}if(btn.dataset.pay){openPay(Number(btn.dataset.pay));return;}if(btn.id==='resetDemo'){if(confirm('¿Restablecer los datos ficticios? Se perderán los cambios guardados en este navegador.')){state.loans=examples();state.clients=[];state.nextClientNumber=1;migrateIdentity();state.selected=null;state.search='';state.filter='todos';state.sortDebtors='alfabetico';state.moneySort='alfabetico';save();render();toast('Datos ficticios restaurados.');}}if(btn.id==='payCancel'){el('payModal').close();}if(btn.id==='copyReminder')copyReminder();if(btn.id==='sendWhatsapp'){var input=el('waNumber'),digits=(input.value||'').replace(/\D/g,'');if(digits.length===9)digits='51'+digits;if(digits.length<11||digits.length>15){toast('Escribe un número válido con código de país (Perú: 9 dígitos).');return;}localStorage.setItem('mamita-demo-phone',input.value);window.open('https://wa.me/'+digits+'?text='+encodeURIComponent(summaryMessage()),'_blank','noopener,noreferrer');}});
+document.addEventListener('click',function(e){var btn=e.target.closest('button');if(!btn)return;if(btn.dataset.tab){selectView(btn.dataset.tab);return;}if(btn.dataset.open){var newId=state.selected===btn.dataset.open?null:btn.dataset.open;state.selected=newId;document.querySelectorAll('.debt-entry').forEach(function(row){var t=row.querySelector('[data-open]'),opened=t&&t.dataset.open===newId,outer=row.querySelector('.accordion-shell');if(outer)outer.classList.toggle('open',!!opened);if(t){t.setAttribute('aria-expanded',opened?'true':'false');var chevron=t.querySelector('.chevron');if(chevron)chevron.textContent=opened?'⌃':'⌄';}if(opened)alignTimelines(row);});return;}if(btn.dataset.more){var settings=el('manage-'+btn.dataset.more);if(settings){var hidden=settings.classList.toggle('hidden');btn.setAttribute('aria-expanded',hidden?'false':'true');}return;}if(btn.dataset.showLink){var box=el('link-'+btn.dataset.showLink);if(box){if(!box.querySelector('option')){toast('No hay otra persona registrada.');return;}box.classList.toggle('hidden');}return;}if(btn.dataset.link){var loan=state.loans.find(function(l){return l.id===btn.dataset.link;}),sel=el('clientPick-'+btn.dataset.link),client=sel&&clientById(sel.value);if(!loan||!client)return;if(confirm('¿Vincular el préstamo «'+loan.name+'» a '+clientCode(client.number)+' · '+client.name+'?')){loan.clientId=client.id;loan.gender=client.gender;save();render();toast('Préstamo vinculado a '+clientCode(client.number));}return;}if(btn.dataset.separate){var loan=state.loans.find(function(l){return l.id===btn.dataset.separate});if(!loan)return;if(confirm('¿Este préstamo es de una persona diferente? Le asignaremos un nuevo número sin borrar sus pagos.')){var person=createClient(loan.name,loan.gender);loan.clientId=person.id;save();render();toast('Nuevo número '+clientCode(person.number));}return;}if(btn.dataset.back){state.selected=null;render();return;}if(btn.dataset.pay){openPay(Number(btn.dataset.pay));return;}if(btn.id==='resetDemo'){if(confirm('¿Restablecer los datos ficticios? Se perderán los cambios guardados en este navegador.')){state.loans=examples();state.clients=[];state.nextClientNumber=1;migrateIdentity();state.selected=null;state.search='';state.filter='todos';state.sortDebtors='alfabetico';state.moneySort='alfabetico';save();render();toast('Datos ficticios restaurados.');}}if(btn.id==='payCancel'){el('payModal').close();}if(btn.id==='copyReminder')copyReminder();if(btn.id==='sendWhatsapp'){var input=el('waNumber'),digits=(input.value||'').replace(/\D/g,'');if(digits.length===9)digits='51'+digits;if(digits.length<11||digits.length>15){toast('Escribe un número válido con código de país (Perú: 9 dígitos).');return;}localStorage.setItem('mamita-demo-phone',input.value);window.open('https://wa.me/'+digits+'?text='+encodeURIComponent(summaryMessage()),'_blank','noopener,noreferrer');}});
 document.addEventListener('submit',function(e){if(e.target.id==='newForm')createLoan(e);if(e.target.id==='payForm')savePayment(e);});
 document.addEventListener('input',function(e){if(['loanAmount','loanDate'].includes(e.target.id))updatePreview();if(e.target.id==='search'){state.search=e.target.value;var box=el('loanList');if(box)box.innerHTML=loanCards(state.loans.map(function(l){return {loan:l,calc:calculations(l,limaToday())}}));}});
 document.addEventListener('change',function(e){if(e.target.name==='method')updatePreview();if(e.target.id==='clientMode')changeClientMode();if(e.target.id==='sortDebtors'){state.sortDebtors=e.target.value;render();}if(e.target.id==='moneySort'){state.moneySort=e.target.value;render();}if(['payInstallment','payDate'].includes(e.target.id))updatePayInfo();});
