@@ -1,4 +1,4 @@
-# Mamita · Demo móvil v0.5
+# Mamita · Demo móvil v0.6
 
 Aplicación experimental de control de préstamos para **Erika Leyla Zambrano**, con diseño verde/blanco y tipografía legible. Repositorio privado.
 
@@ -21,6 +21,15 @@ Para deudas ya guardadas antes de la versión 0.4, la primera carga migra los re
 
 ### Refinamiento de interfaz (v0.5)
 Se simplificó el detalle desplegable para quitar las secciones «Pagado / Por cobrar», «Persona / Vincular», «Pagos registrados» y «Copiar recordatorio» que estaban ocupando demasiado espacio. El saldo pendiente ya figura en la cabecera de la deuda. El cronograma sigue siendo desplazable y permite tocar cada cuota; el botón «Registrar pago» abre el formulario con la primera cuota todavía pendiente. El movimiento de pagos permanece almacenado y accesible desde las opciones avanzadas. No cambia el cálculo ni la asociación de cuentas.
+
+
+### Diseño Atelier (v0.6)
+
+Rediseño integral, no un parche de CSS: se eliminaron las cinco capas de estilos antiguos y se sustituyeron por un sistema único. El inicio ahora utiliza una cabecera verde bosque editorial con el corazón de Mamita y tres acciones en filas numeradas, íconos vectoriales consistentes y sin texto de bienvenida. En las pantallas interiores predominan fondos claros, controles más rectos, tipografía legible, bordes finos y sombras mínimas. Los resúmenes de importes se reorganizaron en dos cifras secundarias y un total destacado de ancho completo para evitar superposiciones en pantallas pequeñas.
+
+Se conservan los registros, los códigos de persona, los alias, el calendario con muñequito, los pagos parciales, la agrupación en «Mi dinero» y el cálculo diario de mora. La fecha de la cabecera ahora es breve (DD/MM), para que no invada el título. La vista respeta pantallas de 330 px en adelante y la configuración del dispositivo para movimiento reducido.
+
+**Comprobaciones:** sintaxis JavaScript, disponibilidad de todas las funciones antiguas, menú principal de tres botones, formulario de nuevo préstamo, detalle con pago y opciones ocultas, agrupación por código y dos cronogramas bajo una misma persona. Las pruebas visuales finales deben hacerse en un navegador real de celular: la URL de AWS Amplify aún no pudo cargarse en el entorno de prueba.
 
 ### Visual móvil
 La escala temporal utiliza separación fija en píxeles por día y desplazamiento horizontal en pantallas pequeñas para evitar superponer fechas, importes y estados. Al superar el último vencimiento muestra una ventana temporal cercana al día actual. La animación es decorativa; los movimientos reducidos se respetan cuando así lo pide el dispositivo.
