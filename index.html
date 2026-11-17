@@ -452,6 +452,30 @@ function renderHome(){
  return '<div class="home-cover"><div class="home-cover-top"><span class="home-monogram">♥</span><span class="home-cover-line"></span></div><h1 class="home-wordmark">mamita<span>.</span></h1></div>'+
  '<div class="home-menu" role="group" aria-label="Secciones de Mamita">'+actions.map(function(a){return '<button class="home-tile" data-tab="'+a.tab+'" type="button"><span class="tile-index">'+a.num+'</span><span class="tile-icon">'+uiIcon(a.icon)+'</span><span class="tile-title">'+a.title+'</span><span class="tile-arrow">'+uiIcon('arrow')+'</span></button>';}).join('')+'</div>';
 }
+function shortDate(d){var p=d.split('-');return p[2]+'/'+p[1];}
+function personWalker(){return '<svg class="little-walker" viewBox="0 0 56 68" aria-hidden="true" focusable="false"><defs><linearGradient id="mamitaHead" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffeb83"/><stop offset=".58" stop-color="#f5c739"/><stop offset="1" stop-color="#e5a820"/></linearGradient><linearGradient id="mamitaBody" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe16a"/><stop offset="1" stop-color="#dea31a"/></linearGradient></defs><ellipse cx="28" cy="64" rx="16" ry="3.2" fill="#24653b" opacity=".15"/><g class="walker-leg left"><path d="M24 43 L20 55 L15 62" stroke="#c48e16" stroke-width="7" stroke-linecap="round" fill="none"/></g><g class="walker-leg right"><path d="M32 43 L36 55 L41 62" stroke="#b78314" stroke-width="7" stroke-linecap="round" fill="none"/></g><g class="walker-arm left"><path d="M19 30 L12 42" stroke="#e3ae29" stroke-width="7" stroke-linecap="round"/></g><g class="walker-arm right"><path d="M37 30 L44 42" stroke="#e3ae29" stroke-width="7" stroke-linecap="round"/></g><rect x="19" y="25" width="18" height="24" rx="9" fill="url(#mamitaBody)"/><circle cx="28" cy="16" r="12.5" fill="url(#mamitaHead)" stroke="#d99f19" stroke-width=".8"/><ellipse cx="23" cy="13.5" rx="2.2" ry="3" fill="#fff4bd" opacity=".6"/></svg>';}
+function loanEnd(l){return shift(l.start,l.method==='semanal'?28:30);}
+
+function journey(loans,compact,controls,asPreview){
+ var today=limaToday(),starts=loans.map(function(l){return l.start;}).sort(),ends=loans.map(loanEnd).sort(),first=starts[0],last=ends[ends.length-1];
+ if(!first||!last)return '';
+ var over=diff(last,today),start=over>0?shift(today,-16):first,end=over>0?shift(today,8):last;
+ var duration=Math.max(1,diff(start,end)),dayPx=compact?15:18,trackWidth=Math.max(300,duration*dayPx+104),lineStart=52,lineLength=trackWidth-104;
+ var x=function(date){return lineStart+lineLength*Math.max(0,Math.min(1,diff(start,date)/duration));};
+ var currentX=x(today),items=[];
+ loans.forEach(function(l){var list=asPreview?totals(l).items:calculations(l,today).schedule;list.forEach(function(q){items.push(q);});});
+ var visible=items.filter(function(q){return q.due>=start&&q.due<=end;}).sort(function(a,b){return a.due.localeCompare(b.due)||a.idx-b.idx;});
+ var ticks='',marked=new Set(visible.map(function(q){return q.due;}));
+ for(var d=1;d<duration;d++){var day=shift(start,d);if(marked.has(day))continue;ticks+='<span class="line-tick'+(day<=today?' passed':'')+'" style="left:'+x(day)+'px" aria-hidden="true"></span>';}
+ var stops=visible.map(function(q){
+  var status=asPreview?'Pendiente':q.status||'Pendiente',cls=status==='Pagada'?'paid':status==='Atrasada'||status==='Mora pendiente'?'overdue':'';
+  var label='<span class="line-dot"></span><span class="line-date">'+shortDate(q.due)+'</span>'+(compact?'':'<span class="line-money">'+money(q.amount)+'</span><span class="line-state">'+escapeHTML(status)+'</span>');
+  return '<div class="line-stop '+cls+'" style="left:'+x(q.due)+'px">'+(controls?'<button class="line-action" type="button" data-pay="'+q.idx+'" aria-label="Registrar pago: cuota '+q.idx+' del '+shortDate(q.due)+'">'+label+'</button>':'<div class="line-action">'+label+'</div>')+'</div>';
+ }).join('');
+ var note=over>0?'<div class="timeline-note">Última fecha: '+shortDate(last)+' · Seguimiento activo</div>':'';
+ return '<div class="timeline-scroll'+(compact?' is-compact':'')+'" tabindex="0" aria-label="Cronograma horizontal. Desliza para ver las fechas."><div class="time-track" style="width:'+trackWidth+'px"><div class="time-rail" style="left:'+lineStart+'px;width:'+lineLength+'px"><span class="time-rail-past" style="width:'+Math.max(0,Math.min(100,(currentX-lineStart)/lineLength*100))+'%"></span></div>'+ticks+stops+'<div class="timeline-walker" style="left:'+currentX+'px"><div class="walker-tag">'+shortDate(today)+'</div>'+personWalker()+'</div></div></div>'+note;
+}
+function alignTimelines(scope){(scope||document).querySelectorAll('.timeline-scroll').forEach(function(box){var w=box.querySelector('.timeline-walker');if(w)box.scrollLeft=Math.max(0,w.offsetLeft-box.clientWidth*.43);});}
 function timelineHorizontal(items,controls){return '<div class="horizontal-timeline">'+items.map(function(q){return '<span>'+shortDate(q.due)+' · '+money(q.amount)+'</span>';}).join('')+'</div>';}
 function renderExpanded(l){
  var c=calculations(l,limaToday()),person=clientById(l.clientId),
